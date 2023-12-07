@@ -50,6 +50,19 @@ public class LoginController {
 		if (numberExists) {
 			return new ResponseHandler(0, "Number already exists");
 		}
+
+		String userNamePattern= "^[a-zA-Z]+$";
+		if(!user.getUserName().matches(userNamePattern)){
+			return new ResponseHandler(0,"user name must contain only letters");
+		}
+		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
+
+		// Validate the phone number against the pattern
+		String phoneNo = user.getPhoneNumber();
+		if (!phoneNo.matches(phonePattern)) {
+			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
+		}
+
 		User post= logInService.postDetails(user);
 	if (post!=null){
 		return new ResponseHandler(1, "Signed Up successfully",post);
@@ -106,6 +119,17 @@ public class LoginController {
 
 		if (numberExists) {
 			return new ResponseHandler(0, "Number already exists");
+		}
+		String userNamePattern= "^[a-zA-Z]+$";
+		if(!admin.getUserName().matches(userNamePattern)){
+			return new ResponseHandler(0,"user name must contain only letters");
+		}
+		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
+
+		// Validate the phone number against the pattern
+		String phoneNo = admin.getPhoneNumber();
+		if (!phoneNo.matches(phonePattern)) {
+			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
 		}
 		Admin post= logInService.postDetailsAdmin(admin);
 		if (post!=null){
