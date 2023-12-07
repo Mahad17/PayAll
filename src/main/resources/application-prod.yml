@@ -1,18 +1,18 @@
 
 spring:
+  profile:
+    active:prod
   datasource:
-    url: jdbc:mysql://localhost:3306/payone
+    url: jdbc:mysql://monorail.proxy.rlwy.net:44698/railway
     username: root
-    password:
+    password: 6H1hADAgad5GHACEE21d5Ecc6fBbBfgF
   jpa:
     hibernate:
       ddl-auto: update
-  profiles:
-    active: prod
 #  application:
 #    name: USER-SERVICE
 
-server:
+#server:
   port: 8082
 #  address: 10.0.115.163
     
