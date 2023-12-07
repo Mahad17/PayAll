@@ -2,6 +2,7 @@ package Pay.controller;
 
 import Pay.model.Admin;
 import Pay.model.User;
+import Pay.repository.AdminRepository;
 import Pay.repository.UserRepository;
 import Pay.response.ResponseHandler;
 import Pay.services.LogInService;
@@ -21,6 +22,8 @@ public class LoginController {
 
 	@Autowired
 	UserRepository repository;
+	@Autowired
+	AdminRepository adminRepository;
 
 	@PostMapping(value = "/user-signup",produces = "application/json")
 	public ResponseHandler signUp(@RequestBody @Valid User user) {
@@ -93,13 +96,13 @@ public class LoginController {
 
 		}
 
-		User find=repository.findByUserName(admin.getUserName());
+		Admin find=adminRepository.findByUserName(admin.getUserName());
 		if(find!=null){
 			return  new ResponseHandler(0,"name already exist");
 
 		}
 		String phoneNumber = admin.getPhoneNumber();
-		boolean numberExists = repository.existsByPhoneNumber(phoneNumber);
+		boolean numberExists = adminRepository.existsByPhoneNumber(phoneNumber);
 
 		if (numberExists) {
 			return new ResponseHandler(0, "Number already exists");
@@ -120,14 +123,14 @@ public class LoginController {
 
 
 //		String phoneNumber= user.getCountryCode() + user.getNumber();
-		boolean numberExists=repository.existsByUserName(admin.getUserName());
+		boolean numberExists=adminRepository.existsByUserName(admin.getUserName());
 		if (!numberExists){
 			return new ResponseHandler(0,"Not Registered");
 		}
 		else{
-			Boolean isAuthenticated = logInService.logIn(admin.getPassword(), admin.getUserName());
+			Boolean isAuthenticated = logInService.logInAdmin(admin.getPassword(), admin.getUserName());
 			if (isAuthenticated) {
-				User authenticate = repository.findByUserName(admin.getUserName());
+				Admin authenticate = adminRepository.findByUserName(admin.getUserName());
 				return new ResponseHandler(1, "Login successful.", authenticate);
 			} else {
 				return new ResponseHandler(0, "Incorrect password.");
@@ -135,9 +138,9 @@ public class LoginController {
 		}
 	}
 
-@GetMapping(name="/all-user")
+@GetMapping(value="/all-user")
 	public ResponseHandler getAllUser(){
-		List<User> findAllUser= repository.findAllUsers();
+		List<User> findAllUser= (List<User>) repository.findAll();
 		if(findAllUser.isEmpty()){
 			return new ResponseHandler(0, "no user found.");
 		}else{
