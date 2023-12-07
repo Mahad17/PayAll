@@ -44,6 +44,12 @@ public class LoginController {
 			return  new ResponseHandler(0,"name already exist");
 
 		}
+		String passwordPattern="^(?!\\s)[A-Za-z\\d!@#$%^&*()_+{}:;<>,.?~\\-=|\\[\\]]{8,}$";
+		if (!user.getPassword().matches(passwordPattern)){
+			return new ResponseHandler(0, "Password must be at least 8 characters long, contain at least one letter, one digit, and no spaces.");
+
+
+		}
 		String phoneNumber = user.getPhoneNumber();
 		boolean numberExists = repository.existsByPhoneNumber(phoneNumber);
 
@@ -55,13 +61,13 @@ public class LoginController {
 		if(!user.getUserName().matches(userNamePattern)){
 			return new ResponseHandler(0,"user name must contain only letters");
 		}
-		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
-
-		// Validate the phone number against the pattern
-		String phoneNo = user.getPhoneNumber();
-		if (!phoneNo.matches(phonePattern)) {
-			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
-		}
+//		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
+//
+//		// Validate the phone number against the pattern
+//		String phoneNo = user.getPhoneNumber();
+//		if (!phoneNo.matches(phonePattern)) {
+//			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
+//		}
 
 		User post= logInService.postDetails(user);
 	if (post!=null){
@@ -124,13 +130,19 @@ public class LoginController {
 		if(!admin.getUserName().matches(userNamePattern)){
 			return new ResponseHandler(0,"user name must contain only letters");
 		}
+		String passwordPattern="^(?!\\s)[A-Za-z\\d!@#$%^&*()_+{}:;<>,.?~\\-=|\\[\\]]{8,}$";
+		if (!admin.getPassword().matches(passwordPattern)){
+			return new ResponseHandler(0, "Password must be at least 8 characters long, contain at least one letter, one digit, and no spaces.");
+
+
+		}
 		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
 
 		// Validate the phone number against the pattern
-		String phoneNo = admin.getPhoneNumber();
-		if (!phoneNo.matches(phonePattern)) {
-			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
-		}
+//		String phoneNo = admin.getPhoneNumber();
+//		if (!phoneNo.matches(phonePattern)) {
+//			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
+//		}
 		Admin post= logInService.postDetailsAdmin(admin);
 		if (post!=null){
 			return new ResponseHandler(1, "Signed Up successfully",post);
