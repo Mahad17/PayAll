@@ -1,5 +1,6 @@
 package Pay.repository;
 
+import Pay.model.Admin;
 import Pay.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -7,15 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer>{
+public interface AdminRepository extends CrudRepository<Admin, Integer>{
 //    Boolean findByNumber(String number);
-    User findByUserName(String username);
+    Admin findByUserName(String username);
     public boolean existsByUserName(String userName);
 
     public boolean existsByPhoneNumber(String phoneNumber);
-    User findByPhoneNumber(String phoneNumber);
+    Admin findByPhoneNumber(String phoneNumber);
 
-    List<User> findAllUsers();
+    List<Admin> findAllAdmin();
 
 //    boolean existsByNumber(String phoneNumber);
 }
