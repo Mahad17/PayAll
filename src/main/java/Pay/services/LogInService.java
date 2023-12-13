@@ -33,7 +33,7 @@ public class LogInService {
 //        String phoneNumberMerge=countryCode + phoneNumber;
 //        User.setPhoneNumber(phoneNumberMerge);
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
-        String encrypt=bCryptPasswordEncoder.encode(User.getPassword()).toString() ;
+        String encrypt= bCryptPasswordEncoder.encode(User.getPassword());
         User.setPassword(encrypt);
         return userRepository.save(User);
     }
@@ -49,7 +49,7 @@ public class LogInService {
 //        String phoneNumberMerge=countryCode + phoneNumber;
 //        User.setPhoneNumber(phoneNumberMerge);
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
-        String encrypt=bCryptPasswordEncoder.encode(admin.getPassword()).toString() ;
+        String encrypt= bCryptPasswordEncoder.encode(admin.getPassword());
         admin.setPassword(encrypt);
         return adminRepository.save(admin);
     }

@@ -120,23 +120,35 @@ public class LoginController {
 			return  new ResponseHandler(0,"name already exist");
 
 		}
+		String phoneNumberPattern= "^\\d{8}$";
 		String phoneNumber = admin.getPhoneNumber();
+		if (!phoneNumber.matches(phoneNumberPattern)){
+			return new ResponseHandler(0,"phone Number must be 8 digits");
+		}
+
 		boolean numberExists = adminRepository.existsByPhoneNumber(phoneNumber);
 
 		if (numberExists) {
 			return new ResponseHandler(0, "Number already exists");
 		}
+
 		String userNamePattern= "^[a-zA-Z]+$";
 		if(!admin.getUserName().matches(userNamePattern)){
 			return new ResponseHandler(0,"user name must contain only letters");
 		}
 		String passwordPattern="^(?!\\s)[A-Za-z\\d!@#$%^&*()_+{}:;<>,.?~\\-=|\\[\\]]{8,}$";
 		if (!admin.getPassword().matches(passwordPattern)){
-			return new ResponseHandler(0, "Password must be at least 8 characters long, contain at least one letter, one digit, and no spaces.");
+			return new ResponseHandler(0, "Password length must be 8.");
 
 
 		}
-		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
+		String cprNumberPattern= "^\\d{9}$";
+		String cprNumber=admin.getCprNumber();
+		if (!cprNumber.matches(cprNumberPattern)){
+			return new ResponseHandler(0, "CPR Number must be at least 9 digits long.");
+
+		}
+
 
 		// Validate the phone number against the pattern
 //		String phoneNo = admin.getPhoneNumber();
@@ -180,7 +192,7 @@ public class LoginController {
 		if(findAllUser.isEmpty()){
 			return new ResponseHandler(0, "no user found.");
 		}else{
-			return new ResponseHandler(0, "These users have registered already.",findAllUser);
+			return new ResponseHandler(1, "These users have registered already.",findAllUser);
 
 		}
 
