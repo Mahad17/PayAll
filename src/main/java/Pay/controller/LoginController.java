@@ -25,16 +25,16 @@ public class LoginController {
 	@Autowired
 	AdminRepository adminRepository;
 
-	@PostMapping(value = "/user-signup",produces = "application/json")
-	public ResponseHandler signUp(@RequestBody @Valid User user) {
+	@PostMapping(value = "/user-signUp",produces = "application/json")
+	public ResponseHandler signUpUser(@RequestBody @Valid User user) {
 		System.out.println(user);
 		if(
 				StringUtils.isEmpty(user.getCprNumber()) ||
-				StringUtils.isEmpty(user.getPhoneNumber()) ||
+						StringUtils.isEmpty(user.getPhoneNumber()) ||
 //						StringUtils.isEmpty(user.getCountryCode()) ||
-				StringUtils.isEmpty(user.getPassword()) ||
-				StringUtils.isEmpty(user.getUserName()
-		)){
+						StringUtils.isEmpty(user.getPassword()) ||
+						StringUtils.isEmpty(user.getUserName()
+						)){
 			return new ResponseHandler(0, "Fields Are Empty");
 
 		}
@@ -44,13 +44,12 @@ public class LoginController {
 			return  new ResponseHandler(0,"name already exist");
 
 		}
-		String passwordPattern="^(?!\\s)[A-Za-z\\d!@#$%^&*()_+{}:;<>,.?~\\-=|\\[\\]]{8,}$";
-		if (!user.getPassword().matches(passwordPattern)){
-			return new ResponseHandler(0, "Password must be at least 8 characters long, contain at least one letter, one digit, and no spaces.");
-
-
-		}
+		String phoneNumberPattern= "^\\d{8}$";
 		String phoneNumber = user.getPhoneNumber();
+		if (!phoneNumber.matches(phoneNumberPattern)){
+			return new ResponseHandler(0,"phone Number must be 8 digits");
+		}
+
 		boolean numberExists = repository.existsByPhoneNumber(phoneNumber);
 
 		if (numberExists) {
@@ -61,21 +60,28 @@ public class LoginController {
 		if(!user.getUserName().matches(userNamePattern)){
 			return new ResponseHandler(0,"user name must contain only letters");
 		}
-//		String phonePattern = "^\\+\\d{1,3}-\\d{3}-\\d{3}-\\d{4}$";
-//
-//		// Validate the phone number against the pattern
-//		String phoneNo = user.getPhoneNumber();
-//		if (!phoneNo.matches(phonePattern)) {
-//			return new ResponseHandler(0, "Invalid phone number format. Please use the format: +1-XXX-XXX-XXXX");
-//		}
+		String passwordPattern="^(?!\\s)[A-Za-z\\d!@#$%^&*()_+{}:;<>,.?~\\-=|\\[\\]]{8,}$";
+		if (!user.getPassword().matches(passwordPattern)){
+			return new ResponseHandler(0, "Password length must be 8.");
+
+
+		}
+		String cprNumberPattern= "^\\d{9}$";
+		String cprNumber=user.getCprNumber();
+		if (!cprNumber.matches(cprNumberPattern)){
+			return new ResponseHandler(0, "CPR Number must be at least 9 digits long.");
+
+		}
+
+
 
 		User post= logInService.postDetails(user);
-	if (post!=null){
-		return new ResponseHandler(1, "Signed Up successfully",post);
+		if (post!=null){
+			return new ResponseHandler(1, "Signed Up successfully",post);
 
-	}else {
-		return new ResponseHandler(0, "Not Successful");
-	}
+		}else {
+			return new ResponseHandler(0, "Not Successful");
+		}
 	}
 @PostMapping(value = "/user-login",produces = "application/json")
 	public ResponseHandler logIn(@RequestBody User user){
@@ -186,7 +192,7 @@ public class LoginController {
 		}
 	}
 
-@GetMapping(value="/all-user")
+@GetMapping(value = "/all-user",produces =  "application/json;charset=UTF-8")
 	public ResponseHandler getAllUser(){
 		List<User> findAllUser= (List<User>) repository.findAll();
 		if(findAllUser.isEmpty()){
